@@ -23,7 +23,6 @@ app.post('/', function (req, res) {
     download(url, 'file.jpg', function () {
         canvas
             .addImage(bg, 0, 0, 500, 169)
-            .setShadowBlur(50)
             .addImage(fs.readFileSync('file.jpg'), 200, 0, 300, 169,)
             .setColor("#FFFFFF")
             .addTextFont('assets/Ubuntu-Regular.ttf', 'Ubuntu')
