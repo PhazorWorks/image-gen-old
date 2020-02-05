@@ -10,7 +10,7 @@ app.use(express.json())
 app.post('/', function (request, response) {
     const canvas = new Canvas(500, 200)
     canvas
-        .addImage(bg, 0,0, 500, 200)
+        .addImage(bg, 0, 0, 500, 200)
         .setColor("#FFFFFF")
         .setShadowBlur(50)
         .addTextFont('assets/Ubuntu-Regular.ttf', 'Ubuntu')
