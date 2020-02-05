@@ -1,28 +1,44 @@
 const express = require('express')
 const {Canvas} = require('canvas-constructor')
 const fs = require('fs')
+const request = require('request')
+const util = require('util')
 const app = express()
 const port = 3333
 const bg = fs.readFileSync('template.jpg')
 
-app.use(express.json())
+let download = function (uri, filename, callback) {
+    request.head(uri, function (err, res, body) {
+        console.log('content-type:', res.headers['content-type'])
+        console.log('content-length:', res.headers['content-length'])
+        request(uri).pipe(fs.createWriteStream(filename)).on('close', callback)
+    })
+}
 
-app.post('/', function (request, response) {
-    const canvas = new Canvas(500, 200)
-    canvas
-        .addImage(bg, 0, 0, 500, 200)
-        .setColor("#FFFFFF")
-        .setShadowBlur(50)
-        .addTextFont('assets/Ubuntu-Regular.ttf', 'Ubuntu')
-        .setTextFont('10pt Ubuntu')
-        .addText('Added to the queue', 10, 15)
-        .setTextFont('20pt Ubuntu')
-        .addText(request.body.title, 10, 40, 450)
-        .setTextFont('10pt Ubuntu')
-        .addText('Length: ' + calculateLength(request.body.length), 10, 170)
-        .addText('Requested by ' + request.body.author, 10, 190, 450)
-    response.type('jpg')
-    response.send(canvas.toBuffer())
+app.use(express.json())
+app.post('/', function (req, res) {
+    const canvas = new Canvas(500, 169)
+    let url;
+    if (req.body.url.includes("youtube.com")) {
+        url = util.format("https://img.youtube.com/vi/%s/maxresdefault.jpg", req.body.identifier)
+    }
+    download(url, 'file.jpg', function () {
+        canvas
+            .addImage(bg, 0, 0, 500, 169)
+            .setShadowBlur(50)
+            .addImage(fs.readFileSync('file.jpg'), 200, 0, 300, 169,)
+            .setColor("#FFFFFF")
+            .addTextFont('assets/Ubuntu-Regular.ttf', 'Ubuntu')
+            .setTextFont('10pt Ubuntu')
+            .addText('Added to the queue', 10, 15)
+            .setTextFont('12pt Ubuntu')
+            .addWrappedText(req.body.title, 10, 40, 200)
+            .setTextFont('10pt Ubuntu')
+            .addText('Length: ' + calculateLength(req.body.length), 10, 139)
+            .addText('Requested by ' + req.body.author, 10, 159, 450)
+        res.type('jpg')
+        res.send(canvas.toBuffer())
+    })
 })
 
 function calculateLength(millis) {
@@ -31,4 +47,4 @@ function calculateLength(millis) {
     return minutes + ":" + (seconds < 10 ? '0' : '') + seconds
 }
 
-app.listen(port)
+app.listen(port, () => console.log(`Server listening on port ${port}`))
