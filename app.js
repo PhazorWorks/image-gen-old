@@ -16,13 +16,13 @@ let download = function (uri, filename, callback) {
 app.use(express.json())
 app.post('/', function (req, res) {
     const canvas = new Canvas(500, 169)
-    let url;
-    if (req.body.url.includes("youtube.com")) {
-        url = util.format("https://img.youtube.com/vi/%s/maxresdefault.jpg", req.body.identifier)
-    }
-    download(url, 'file.png', function () {
+    download(req.body.url, 'file.png', function () {
+        if (req.body.url.includes("youtube.com")) {
+            canvas.addImage(fs.readFileSync('file.png'), 200, -24, 300, 215,)
+        } else {
+            canvas.addImage(fs.readFileSync('file.png'), 200, 0, 300, 169,)
+        }
         canvas
-            .addImage(fs.readFileSync('file.png'), 200, 0, 300, 169,)
             .addImage(bg, 0, 0, 400, 169)
             .setColor("#FFFFFF")
             .addTextFont('assets/Ubuntu-Regular.ttf', 'Ubuntu')
@@ -35,6 +35,7 @@ app.post('/', function (req, res) {
             .addText('Requested by ' + req.body.author, 10, 159, 450)
         res.type('png')
         res.send(canvas.toBuffer())
+
     })
 })
 
