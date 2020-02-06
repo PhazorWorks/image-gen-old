@@ -1,0 +1,12 @@
+kind: pipeline
+type: docker
+name: build
+
+steps:
+  - name: docker-build
+    image: plugins/docker
+    settings:
+      repo: reg.phazor.works/gigafyde/image-gen
+      registry: reg.phazor.works
+      tags: latest
+      force_tag: true
