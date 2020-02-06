@@ -18,7 +18,7 @@ app.post('/', function (req, res) {
     const canvas = new Canvas(500, 169)
     download(req.body.url, 'file.png', function () {
         if (req.body.url.includes("youtube.com")) {
-            canvas.addImage(fs.readFileSync('file.png'), 200, -24, 300, 215,)
+            canvas.addImage(fs.readFileSync('file.png'), 200, -28, 300, 225,)
         } else {
             canvas.addImage(fs.readFileSync('file.png'), 200, 0, 300, 169,)
         }
