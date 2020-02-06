@@ -5,7 +5,7 @@ const request = require('request')
 const util = require('util')
 const app = express()
 const port = 3003
-const bg = fs.readFileSync('template.jpg')
+const bg = fs.readFileSync('template.png')
 
 let download = function (uri, filename, callback) {
     request.head(uri, function (err, res, body) {
@@ -20,10 +20,10 @@ app.post('/', function (req, res) {
     if (req.body.url.includes("youtube.com")) {
         url = util.format("https://img.youtube.com/vi/%s/maxresdefault.jpg", req.body.identifier)
     }
-    download(url, 'file.jpg', function () {
+    download(url, 'file.png', function () {
         canvas
-            .addImage(bg, 0, 0, 500, 169)
-            .addImage(fs.readFileSync('file.jpg'), 200, 0, 300, 169,)
+            .addImage(fs.readFileSync('file.png'), 200, 0, 300, 169,)
+            .addImage(bg, 0, 0, 400, 169)
             .setColor("#FFFFFF")
             .addTextFont('assets/Ubuntu-Regular.ttf', 'Ubuntu')
             .setTextFont('10pt Ubuntu')
@@ -33,7 +33,7 @@ app.post('/', function (req, res) {
             .setTextFont('10pt Ubuntu')
             .addText('Length: ' + calculateLength(req.body.length), 10, 139)
             .addText('Requested by ' + req.body.author, 10, 159, 450)
-        res.type('jpg')
+        res.type('png')
         res.send(canvas.toBuffer())
     })
 })
