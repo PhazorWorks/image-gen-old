@@ -33,7 +33,11 @@ app.post('/', function (req, res) {
 
         res.type('png')
         res.send(canvas.toBuffer())
-
+        try {
+            fs.unlinkSync('file.png')
+        } catch(err) {
+            console.error('failed to remove file' + err)
+        }
     })
 })
 
