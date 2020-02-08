@@ -15,22 +15,21 @@ function download(uri, filename, callback) {
 app.use(express.json())
 
 app.post('/', function (req, res) {
-    const canvas = new Canvas(500, 169)
+    const canvas = new Canvas(1920, 720)
 
     download(req.body.url, 'file.png', function () {
-        if (req.body.url.includes("youtube.com")) canvas.addImage(fs.readFileSync('file.png'), 200, -28, 300, 225,)
-        else canvas.addImage(fs.readFileSync('file.png'), 200, 0, 300, 169,)
-        canvas
-            .addImage(bg, 0, 0, 400, 169)
+        if (req.body.url.includes("youtube.com")) canvas.addImage(fs.readFileSync('file.png'), 600, -125, 1400, 965,)
+        else canvas.addImage(fs.readFileSync('file.png'), 960, 0, 1280, 720,)
+        canvas.addImage(bg, 0, 0, 1400, 720)
             .setColor("#FFFFFF")
             .addTextFont('assets/Ubuntu-Regular.ttf', 'Ubuntu')
-            .setTextFont('10pt Ubuntu')
-            .addText('Added to the queue', 10, 15)
-            .setTextFont('12pt Ubuntu')
-            .addWrappedText(req.body.title, 10, 40, 200)
-            .setTextFont('10pt Ubuntu')
-            .addText('Length: ' + calculateLength(req.body.length), 10, 139)
-            .addText('Requested by ' + req.body.author, 10, 159, 450)
+            .setTextFont('35pt Ubuntu')
+            .addText('Added to the queue', 10, 45)
+            .setTextFont('42pt Ubuntu')
+            .addWrappedText(req.body.title, 10, 120, 1100)
+            .setTextFont('35pt Ubuntu')
+            .addText('Length: ' + calculateLength(req.body.length), 10, 650)
+            .addText('Requested by ' + req.body.author, 10, 700, 450)
 
         res.type('png')
         res.send(canvas.toBuffer())
