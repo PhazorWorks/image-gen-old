@@ -26,7 +26,7 @@ app.post('/', function (req, res) {
             .setTextFont('35pt Ubuntu')
             .addText('Added to the queue', 10, 45)
             .setTextFont('42pt Ubuntu')
-            .addWrappedText(req.body.title, 10, 120, 1100)
+            .addWrappedText(req.body.title, 10, 120, 580)
             .setTextFont('35pt Ubuntu')
             .addText('Length: ' + calculateLength(req.body.length), 10, 650)
             .addText('Requested by ' + req.body.author, 10, 700, 450)
