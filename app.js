@@ -18,7 +18,7 @@ app.post('/', function (req, res) {
     const canvas = new Canvas(1920, 720)
 
     download(req.body.url, 'file.png', function () {
-        if (req.body.url.includes("youtube.com")) canvas.addImage(fs.readFileSync('file.png'), 600, -125, 1400, 965,)
+        if (req.body.url.includes("youtube.com")) canvas.addImage(fs.readFileSync('file.png'), 600, -125, 1300, 965,)
         else canvas.addImage(fs.readFileSync('file.png'), 960, 0, 1280, 720,)
         canvas.addImage(bg, 0, 0, 1400, 720)
             .setColor("#FFFFFF")
