@@ -54,10 +54,8 @@ app.post('/np', async function (req, res) {
         .addText(calcLength(req.body.position) + "/" + calcLength(req.body.duration), 960, 400, 1850)
         .beginPath()
         .addImage(progFade, 210, 500, calcSongProgress(req.body.position, req.body.duration), 50)
-        .restore()
         .setTextFont('35pt Ubuntu')
         .addText('Requested by ' + req.body.author, 260, 700, 510)
-        .restore()
 
     res.type('png')
     res.send(canvas.toBuffer())
