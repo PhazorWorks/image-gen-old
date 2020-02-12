@@ -1,11 +1,12 @@
-const express = require('express')
-const {Canvas} = require('canvas-constructor')
-const fs = require('fs')
-const request = require('request')
-const app = express()
-const port = 3003
-const fade = fs.readFileSync('template-fade.png')
-const bg = fs.readFileSync('template.png')
+const express = require('express');
+const {Canvas} = require('canvas-constructor');
+const fs = require('fs');
+const request = require('request');
+const app = express();
+const port = 3003;
+const fade = fs.readFileSync('assets/images/template-fade.png');
+const bg = fs.readFileSync('assets/images/template.png');
+const progFade = fs.readFileSync('assets/images/fade.png');
 
 function download(uri, filename, callback) {
     request.head(uri, function () {
@@ -42,7 +43,7 @@ app.post('/convert', function (req, res) {
     })
 })
 
-app.post('/np', function (req, res) {
+app.post('/np', async function (req, res) {
     const canvas = new Canvas(1920, 720)
         .addImage(bg, 0, 0, 1920, 720)
         .setColor("white")
@@ -50,10 +51,8 @@ app.post('/np', function (req, res) {
         .setTextFont('55pt Ubuntu')
         .setTextAlign("center")
         .addWrappedText(req.body.title, 960, 200, 1850)
-        .addText(calcLength(req.body.position) + "/" + calcLength(req.body.duration) , 960, 450, 1850)
-        .beginPath()
-        .setColor('red')
-        .addRect(210, 500, calcSongProgress(req.body.position, req.body.duration), 100)
+        .addText(calcLength(req.body.position) + "/" + calcLength(req.body.duration), 960, 400, 1850)
+        .addImage(progFade, 210, 500, calcSongProgress(req.body.position, req.body.duration), 50)
 
     res.type('png')
     res.send(canvas.toBuffer())
