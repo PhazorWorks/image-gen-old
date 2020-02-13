@@ -1,12 +1,12 @@
-const express = require('express');
-const {Canvas} = require('canvas-constructor');
-const fs = require('fs');
-const request = require('request');
-const app = express();
-const port = 3003;
-const fade = fs.readFileSync('assets/images/template-fade.png');
-const bg = fs.readFileSync('assets/images/template.png');
-const progFade = fs.readFileSync('assets/images/fade.png');
+const express = require('express')
+const {Canvas} = require('canvas-constructor')
+const fs = require('fs')
+const request = require('request')
+const app = express()
+const port = 3003
+const fade = fs.readFileSync('assets/images/template-fade.png')
+const bg = fs.readFileSync('assets/images/template.png')
+const progFade = fs.readFileSync('assets/images/fade.png')
 
 function download(uri, filename, callback) {
     request.head(uri, function () {
@@ -18,29 +18,43 @@ app.use(express.json())
 
 app.post('/convert', function (req, res) {
     const canvas = new Canvas(1920, 720)
-
-    download(req.body.url, 'file.png', function () {
-        if (req.body.url.includes("youtube.com")) canvas.addImage(fs.readFileSync('file.png'), 600, -125, 1300, 965,)
-        else canvas.addImage(fs.readFileSync('file.png'), 960, 0, 1280, 720,)
-        canvas.addImage(fade, 0, 0, 1400, 720)
-            .setColor("#FFFFFF")
-            .addTextFont('assets/Ubuntu-Regular.ttf', 'Ubuntu')
-            .setTextFont('35pt Ubuntu')
-            .addText('Added to the queue', 10, 45)
-            .setTextFont('42pt Ubuntu')
-            .addWrappedText(req.body.title, 10, 120, 580)
-            .setTextFont('35pt Ubuntu')
-            .addText('Length: ' + calcLength(req.body.length), 10, 650)
-            .addText('Requested by ' + req.body.author, 10, 700, 450)
-
-        res.type('png')
-        res.send(canvas.toBuffer())
-        try {
-            fs.unlinkSync('file.png')
-        } catch (err) {
-            console.error('failed to remove file' + err)
-        }
-    })
+    if (req.body.uri.includes('youtube.com')) {
+        download(getYoutubeThumbnailUri(req.body.identifier), 'file.png', function () {
+            canvas.addImage(fs.readFileSync('file.png'), 600, -125, 1300, 965,)
+                .addImage(fade, 0, 0, 1400, 720)
+                .setColor("#FFFFFF")
+                .addTextFont('assets/Ubuntu-Regular.ttf', 'Ubuntu')
+                .setTextFont('35pt Ubuntu')
+                .addText('Added to the queue', 10, 45)
+                .setTextFont('42pt Ubuntu')
+                .addWrappedText(req.body.title, 10, 120, 580)
+                .setTextFont('35pt Ubuntu')
+                .addText('Length: ' + calcLength(req.body.duration), 10, 650)
+                .addText('Requested by ' + req.body.author, 10, 700, 450)
+            res.type('png')
+            res.send(canvas.toBuffer())
+            try {
+                fs.unlinkSync('file.png')
+            } catch (err) {
+                console.error('failed to remove file' + err)
+            }
+        })
+        return
+    } else canvas.addImage(bg, 0, 0, 1920, 720,)
+        .setColor("#FFFFFF")
+        .addTextFont('assets/Ubuntu-Regular.ttf', 'Ubuntu')
+        .setTextFont('35pt Ubuntu')
+        .setTextAlign("center")
+        .addWrappedText('Added to the queue', 960, 45, 1850)
+        .setTextFont('55pt Ubuntu')
+        .addWrappedText(req.body.title, 960, 250, 1850)
+        .setTextFont('35pt Ubuntu')
+        .setTextAlign("left")
+        .addWrappedText('Length: ' + calcLength(req.body.duration), 500, 700, 500)
+        .addText('Requested by ' + req.body.author, 980, 700, 450)
+    res.type('png')
+    res.send(canvas.toBuffer())
+    return
 })
 
 app.post('/np', async function (req, res) {
@@ -57,6 +71,10 @@ app.post('/np', async function (req, res) {
     res.type('png')
     res.send(canvas.toBuffer())
 })
+
+function getYoutubeThumbnailUri(identifier) {
+    return 'https://img.youtube.com/vi/%s/hqdefault.jpg'.replace('%s', identifier)
+}
 
 function calcSongProgress(position, duration) {
     let width = 1500
