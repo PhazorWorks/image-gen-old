@@ -50,9 +50,9 @@ app.post('/convert', async function (req, res) {
         .addWrappedText(req.body.title, 960, 250, 1850)
         .setTextFont('35pt Ubuntu')
         .setTextAlign("right")
-        .addWrappedText('Length: ' + calcLength(req.body.duration), 940, 700, 500)
+        .addWrappedText('Length: ' + calcLength(req.body.duration), 900, 700, 500)
         .setTextAlign("left")
-        .addText('Requested by ' + req.body.author, 980, 700, 450)
+        .addText('Requested by ' + req.body.author, 940, 700, 450)
     res.type('png')
     res.send(canvas.toBuffer())
     return
