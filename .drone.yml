@@ -10,7 +10,6 @@ steps:
       registry: reg.phazor.works
       tags: latest
       force_tag: true
-
    - name: docker-deploy
      image: appleboy/drone-ssh:1.5.5
      settings:
@@ -23,7 +22,6 @@ steps:
        command_timeout: 5m
        script:
          - 'docker service update --force --image reg.phazor.works/gigafyde/image-gen:latest apollo-image-gen'
-
   - name: discord-notify
     image: appleboy/drone-discord
     when:
