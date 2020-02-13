@@ -29,7 +29,7 @@ steps:
         - success
         - failure
     settings:
-      message: "{{#success build.status}} ✅ Build #{{build.number}} of `{{repo.name}}` succeeded and deployed to production.\n📝 Commit by {{commit.author}} on `{{commit.branch}}`:\n```{{commit.message}} ```\n🌐 {{ build.link }} {{else}} ❌ Build #{{build.number}} of `{{repo.name}}` failed.\n📝 Commit by {{commit.author}} on `{{commit.branch}}`:\n```{{commit.message}} ```\n🌐 {{ build.link }} {{/success}}\n"
+      message: "{{#success build.status}} ✅ Build #{{build.number}} of `{{repo.name}}` succeeded and deployed to production. {{else}} ❌ Build #{{build.number}} of `{{repo.name}}` failed. {{/success}}\n"
       webhook_id:
         from_secret: webhook_id
       webhook_token:
