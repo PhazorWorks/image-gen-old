@@ -16,12 +16,12 @@ function download(uri, filename, callback) {
 
 app.use(express.json())
 
-app.post('/convert', function (req, res) {
+app.post('/convert', async function (req, res) {
     const canvas = new Canvas(1920, 720)
     if (req.body.uri.includes('youtube.com')) {
         download(getYoutubeThumbnailUri(req.body.identifier), 'file.png', function () {
             canvas.addImage(fs.readFileSync('file.png'), 600, -125, 1300, 965,)
-                .addImage(fade, 0, 0, 1400, 720)
+                .addImage(fade, 0, 0, 1800, 720)
                 .setColor("#FFFFFF")
                 .addTextFont('assets/Ubuntu-Regular.ttf', 'Ubuntu')
                 .setTextFont('35pt Ubuntu')
@@ -66,7 +66,10 @@ app.post('/np', async function (req, res) {
         .setTextAlign("center")
         .addWrappedText(req.body.title, 960, 200, 1850)
         .addText(calcLength(req.body.position) + "/" + calcLength(req.body.duration), 960, 400, 1850)
-        .addImage(progFade, 210, 500, calcSongProgress(req.body.position, req.body.duration), 50)
+
+    req.body.position < 5000 ?
+        canvas.addText('The song has just started', 950, 575) :
+        canvas.addImage(progFade, 210, 500, calcSongProgress(req.body.position, req.body.duration), 50)
 
     res.type('png')
     res.send(canvas.toBuffer())
