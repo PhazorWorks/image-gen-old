@@ -1,5 +1,5 @@
 const express = require('express')
-const Raven = require('raven');
+const Raven = require('raven')
 const {Canvas} = require('canvas-constructor')
 const fs = require('fs')
 const request = require('request')
@@ -9,18 +9,17 @@ const fade = fs.readFileSync('assets/images/template-fade.png')
 const bg = fs.readFileSync('assets/images/template.png')
 const progFade = fs.readFileSync('assets/images/fade.png')
 
-Raven.config(process.env.SENTRY_DSN).install();
+Raven.config(process.env.SENTRY_DSN).install()
 
-app.use(Raven.requestHandler());
-app.use(Raven.errorHandler());
+app.use(Raven.requestHandler())
+app.use(Raven.errorHandler())
+app.use(express.json())
 
 function download(uri, filename, callback) {
     request.head(uri, function () {
         request(uri).pipe(fs.createWriteStream(filename)).on('close', callback)
     })
 }
-
-app.use(express.json())
 
 app.post('/convert', async function (req, res) {
     const canvas = new Canvas(1920, 720)
@@ -60,8 +59,7 @@ app.post('/convert', async function (req, res) {
         .setTextAlign("left")
         .addText('Requested by ' + req.body.author, 940, 700, 450)
     res.type('png')
-    res.send(canvas.toBuffer())
-    return
+    return res.send(canvas.toBuffer())
 })
 
 app.post('/np', async function (req, res) {
@@ -79,7 +77,7 @@ app.post('/np', async function (req, res) {
         canvas.addImage(progFade, 210, 500, calcSongProgress(req.body.position, req.body.duration), 50)
 
     res.type('png')
-    res.send(canvas.toBuffer())
+    return res.send(canvas.toBuffer())
 })
 
 function getYoutubeThumbnailUri(identifier) {
@@ -99,8 +97,8 @@ function calcLength(length) {
 }
 
 app.use(function onError(err, req, res) {
-    res.statusCode = 500;
-    res.end(res.sentry + '\n');
-});
+    res.statusCode = 500
+    res.end(res.sentry + '\n')
+})
 
 app.listen(port, () => console.log(`Server listening on port ${port}`))
