@@ -27,15 +27,14 @@ app.post('/convert', async function (req, res) {
         download(getYoutubeThumbnailUri(req.body.identifier), 'file.png', function () {
             canvas.addImage(fs.readFileSync('file.png'), 600, -125, 1300, 965,)
                 .addImage(fade, 0, 0, 1800, 720)
-                .setColor("#FFFFFF")
-                .addTextFont('assets/Ubuntu-Regular.ttf', 'Ubuntu')
-                .setTextFont('35pt Ubuntu')
+                .setColor('white')
+                .setTextFont('35pt Utopia')
                 .addText('Added to the queue', 10, 45)
-                .setTextFont('42pt Ubuntu')
+                .setTextFont('42pt Utopia')
                 .addWrappedText(req.body.title, 10, 120, 580)
-                .setTextFont('35pt Ubuntu')
+                .setTextFont('35pt Utopia')
                 .addText('Length: ' + calcLength(req.body.duration), 10, 650)
-                .addText('Requested by ' + req.body.author, 10, 700, 450)
+                .addText('Requested by ' + req.body.author, 10, 700)
             res.type('png')
             res.send(canvas.toBuffer())
             try {
@@ -46,14 +45,13 @@ app.post('/convert', async function (req, res) {
         })
         return
     } else canvas.addImage(bg, 0, 0, 1920, 720,)
-        .setColor("#FFFFFF")
-        .addTextFont('assets/Ubuntu-Regular.ttf', 'Ubuntu')
-        .setTextFont('35pt Ubuntu')
+        .setColor('white')
+        .setTextFont('35pt Utopia')
         .setTextAlign("center")
         .addWrappedText('Added to the queue', 960, 45, 1850)
-        .setTextFont('55pt Ubuntu')
+        .setTextFont('55pt Utopia')
         .addWrappedText(req.body.title, 960, 250, 1850)
-        .setTextFont('35pt Ubuntu')
+        .setTextFont('35pt Utopia')
         .setTextAlign("right")
         .addWrappedText('Length: ' + calcLength(req.body.duration), 900, 700, 500)
         .setTextAlign("left")
@@ -66,8 +64,7 @@ app.post('/np', async function (req, res) {
     const canvas = new Canvas(1920, 720)
         .addImage(bg, 0, 0, 1920, 720)
         .setColor("white")
-        .addTextFont('assets/Ubuntu-Regular.ttf', 'Ubuntu')
-        .setTextFont('55pt Ubuntu')
+        .setTextFont('55pt Utopia')
         .setTextAlign("center")
         .addWrappedText(req.body.title, 960, 200, 1850)
         .addText(calcLength(req.body.position) + "/" + calcLength(req.body.duration), 960, 400, 1850)
@@ -95,10 +92,5 @@ function calcLength(length) {
     let seconds = ((length % 60000) / 1000).toFixed(0)
     return minutes + ":" + (seconds < 10 ? '0' : '') + seconds
 }
-
-app.use(function onError(err, req, res) {
-    res.statusCode = 500
-    res.end(res.sentry + '\n')
-})
 
 app.listen(port, () => console.log(`Server listening on port ${port}`))
