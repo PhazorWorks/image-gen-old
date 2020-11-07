@@ -1,5 +1,4 @@
 const express = require('express')
-const Raven = require('raven')
 const {Canvas} = require('canvas-constructor')
 const fs = require('fs')
 const request = require('request')
@@ -9,10 +8,6 @@ const fade = fs.readFileSync('assets/images/template-fade.png')
 const bg = fs.readFileSync('assets/images/template.png')
 const progFade = fs.readFileSync('assets/images/fade.png')
 
-Raven.config(process.env.SENTRY_DSN).install()
-
-app.use(Raven.requestHandler())
-app.use(Raven.errorHandler())
 app.use(express.json())
 
 function download(uri, filename, callback) {
@@ -92,10 +87,5 @@ function calcLength(length) {
     let seconds = ((length % 60000) / 1000).toFixed(0)
     return minutes + ":" + (seconds < 10 ? '0' : '') + seconds
 }
-
-app.use(function onError(err, req, res) {
-    res.statusCode = 500
-    res.end(res.sentry + '\n')
-})
 
 app.listen(port, () => console.log(`Server listening on port ${port}`))
