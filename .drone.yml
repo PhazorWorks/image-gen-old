@@ -8,7 +8,7 @@ steps:
     settings:
       repo: gigafyde/image-gen
       username: gigafyde
-        password:
-          from_secret: docker_token
+      password:
+        from_secret: docker_token
       tags: dev
       force_tag: true
