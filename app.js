@@ -1,18 +1,14 @@
 const express = require('express')
-const Raven = require('raven')
 const {Canvas} = require('canvas-constructor')
 const fs = require('fs')
 const request = require('request')
+const { Webhook } = require('discord-webhook-node');
 const app = express()
 const port = 3003
 const fade = fs.readFileSync('assets/images/template-fade.png')
 const bg = fs.readFileSync('assets/images/template.png')
 const progFade = fs.readFileSync('assets/images/fade.png')
 
-Raven.config(process.env.SENTRY_DSN).install()
-
-app.use(Raven.requestHandler())
-app.use(Raven.errorHandler())
 app.use(express.json())
 
 function download(uri, filename, callback) {
@@ -35,10 +31,15 @@ app.post('/convert', async function (req, res) {
                 .setTextSize(35)
                 .addText('Length: ' + calcLength(req.body.duration), 10, 650)
                 .addText('Requested by ' + req.body.author, 10, 700, 450)
-            res.type('png')
-            res.send(canvas.toBuffer())
+            fs.writeFileSync('out.png', canvas.toBuffer())
+            let hook = new Webhook(req.body.webhook);
+            hook.setUsername("Apollo Image Test")
+            hook.sendFile('out.png')
+            // res.type('png')
+            // res.send(canvas.toBuffer())
             try {
                 fs.unlinkSync('file.png')
+                fs.unlinkSync('out.png')
             } catch (err) {
                 console.error('failed to remove file' + err)
             }
@@ -92,10 +93,5 @@ function calcLength(length) {
     let seconds = ((length % 60000) / 1000).toFixed(0)
     return minutes + ":" + (seconds < 10 ? '0' : '') + seconds
 }
-
-app.use(function onError(err, req, res) {
-    res.statusCode = 500
-    res.end(res.sentry + '\n')
-})
 
 app.listen(port, () => console.log(`Server listening on port ${port}`))
