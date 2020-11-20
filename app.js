@@ -14,7 +14,7 @@ app.use(express.json())
 function download(uri, filename, callback) {
     request.head(uri, function () {
         request(uri).pipe(fs.createWriteStream(filename)).on('close', callback)
-    })``
+    })
 }
 
 app.post('/convert', async function (req, res) {
