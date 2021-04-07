@@ -28,7 +28,7 @@
 
 
 # ---- Base Node ----
-FROM node:14-buster AS base
+FROM node:14-buster-slim AS base
 WORKDIR /app
 RUN apt update -y
 RUN apt install fontconfig  -y
@@ -51,7 +51,7 @@ RUN npm install
 # -- Release --
 FROM base AS release
 # copy production node_modules
-COPY --from=base /app/prod_node_modules ./node_modules
+COPY --from=dependencies /app/prod_node_modules ./node_modules
 # copy app sources
 COPY . .
 
