@@ -2,7 +2,7 @@ FROM node:14-buster
 WORKDIR /app
 
 RUN apt update -y
-RUN apt install fontconfig build-essential libcairo2-dev libpango1.0-dev libjpeg-dev libgif-dev librsvg2-dev
+RUN apt install fontconfig build-essential libcairo2-dev libpango1.0-dev libjpeg-dev libgif-dev librsvg2-dev -y
 RUN fc-cache -fv
 
 COPY package.json package.json
