@@ -13,7 +13,7 @@ steps:
       repo: gigafyde/image-gen
       username: gigafyde
       password:
-        from_secret: docker_token
+        from_secret: dockerhub
       tags: arm64
       force_tag: true
     when:
