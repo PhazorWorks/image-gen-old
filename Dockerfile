@@ -20,7 +20,9 @@ RUN cp -R node_modules prod_node_modules
 # install ALL node_modules, including 'devDependencies'
 RUN npm install
 
-FROM base AS release
+
+# -- Release --
+FROM node:14-buster AS release
 # copy production node_modules
 COPY --from=dependencies /app/prod_node_modules ./node_modules
 # copy app sources
