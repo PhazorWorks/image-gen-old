@@ -18,7 +18,7 @@ RUN npm install
 # -- Release --
 FROM node:14-buster AS release
 # copy production node_modules
-COPY --from=dependencies /app/prod_node_modules ./node_modules
+COPY --from=base /app/prod_node_modules ./node_modules
 # copy app sources
 COPY . .
 
