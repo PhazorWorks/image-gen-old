@@ -6,13 +6,7 @@ COPY package.json .
 RUN apt update -y
 RUN apt install fontconfig build-essential libcairo2-dev libpango1.0-dev libjpeg-dev libgif-dev librsvg2-dev -y
 RUN fc-cache -fv
-#
-#RUN npm ci
 
-#
-# ---- Dependencies ----
-FROM base AS dependencies
-# install node packages
 RUN npm set progress=false && npm config set depth 0
 RUN npm install --only=production
 # copy production node_modules aside
