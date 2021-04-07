@@ -2,7 +2,7 @@
 FROM node:14-buster-slim AS base
 WORKDIR /app
 RUN apt update -y
-RUN apt install fontconfig  -y
+RUN apt install fontconfig libpixman-1-0  -y
 RUN fc-cache -fv
 COPY package.json .
 
