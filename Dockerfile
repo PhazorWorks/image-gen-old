@@ -1,5 +1,5 @@
 # -- Base --
-FROM node:14-buster
+FROM node:14-buster AS base
 WORKDIR /app
 COPY package.json .
 
