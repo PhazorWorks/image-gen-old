@@ -19,10 +19,11 @@ function download(uri, filename, callback) {
 
 app.post('/convert', async function (req, res) {
     const canvas = new Canvas(900, 400) // 1920   -  720
+    let random = Math.floor(Math.random() * 100);
     if (req.body.uri.includes('youtube.com')) {
-        download(getYoutubeThumbnailUri(req.body.identifier), 'thumbnail.png', function () {
+        download(getYoutubeThumbnailUri(req.body.identifier), 'thumbnail.png' + random, function () {
             canvas
-                .addImage(fs.readFileSync('thumbnail.png'), 190, -100, 710, 600,)
+                .addImage(fs.readFileSync('thumbnail.png' + random), 190, -100, 710, 600,)
                 .addImage(vertfade, 0, 0, 900, 150)
                 .addImage(fade, 0, 0, 500, 400)
                 .setColor('white')
@@ -31,12 +32,12 @@ app.post('/convert', async function (req, res) {
                 .setTextSize(20)
                 .addText('Length: ' + calcLength(req.body.duration), 10, 365)
                 .addText('Added by ' + req.body.author, 10, 390, 350)
-            fs.writeFileSync('out.png', canvas.toBuffer())
+            fs.writeFileSync('out.png' + random, canvas.toBuffer())
             res.type('png')
             res.send(canvas.toBuffer())
             try {
-                fs.unlinkSync('thumbnail.png')
-                fs.unlinkSync('out.png')
+                fs.unlinkSync('thumbnail.png' + random)
+                fs.unlinkSync('out.png' + random)
             } catch (err) {
                 console.error('failed to remove file' + err)
             }
