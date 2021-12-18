@@ -69,7 +69,7 @@ app.post('/np', async function (req, res) {
         .addText(calcLength(req.body.position) + "/" + calcLength(req.body.duration), 960, 400, 1850)
 
     req.body.position < 5000 ?
-        canvas.addText('The song has just started', 950, 575) :
+        canvas.addText('Now Playing', 950, 575) :
         canvas.addImage(progFade, 210, 500, calcSongProgress(req.body.position, req.body.duration), 50)
 
     res.type('png')
